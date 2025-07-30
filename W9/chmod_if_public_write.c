@@ -17,7 +17,10 @@ void chmod_if_public_write(char *pathname) {
     // Get mode of the file
     mode_t mode = s.st_mode;
 
-
+    // we want to look at the other/public write byte
+    // mode    =   drwxrwxrwx
+    //                     v
+    // S_IWOTH = 0b0000000010
     if (!(mode & S_IWOTH)) {
         printf("%s is not publically writable\n", pathname);
         return;
@@ -34,7 +37,7 @@ void chmod_if_public_write(char *pathname) {
     // ~S_IWOTH = 0b1111111101
     //  mode & ~S_IWOTH = 0b1111111101
 
-    // Change the mode of the file
+    // Call the chmod function to change the mode of the file
     if (chmod(pathname, mode) != 0) {
         perror(pathname);
         exit(1);
